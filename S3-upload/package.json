@@ -1,5 +1,5 @@
 {
-  "name": "flatfile-s3-simple-demo",
+  "name": "flatfile-s3-upload-demo",
   "version": "1.0.0",
   "description": "A simple demo for an Amazon S3 upload with Flatfile",
   "scripts": {
