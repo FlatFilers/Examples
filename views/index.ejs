@@ -3,7 +3,11 @@
 <head>
 	<title>Flatfile S3 Upload</title>
 	<meta charset="UTF-8" />
+	<script src="https://unpkg.com/flatfile-csv-importer/build/dist/index.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="index.css">
+	<script>
+		var signedRequest = <%- JSON.stringify(signedRequest) %>
+	</script>
 </head>
 
 <body>
@@ -16,7 +20,9 @@
 		</div>
 		<textarea id="raw_output">Your S3 url will appear here.</textarea>
 	</div>
-
+	
+	<script src="importer.js"></script>
+	
 </body>
 
 </html>
