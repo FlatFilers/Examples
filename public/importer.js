@@ -99,6 +99,7 @@ function uploadToS3 (file) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         document.getElementById('raw_output').value = url
+        robotImporter.displaySuccess('Success!')
       } else {
         alert('Could not upload file.')
       }
