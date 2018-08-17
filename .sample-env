@@ -1,0 +1,8 @@
+AWS_SECRET_ACCESS_KEY=fake_secret
+AWS_ACCESS_KEY_ID=fake_key_id
+AWS_BUCKET_REGION=fake_region
+AWS_BUCKET_NAME=fake_bucket_name
+
+FF_LICENSE=fake_flatfile_license
+
+PORT=9000
