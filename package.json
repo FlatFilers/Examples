@@ -21,7 +21,8 @@
     "aws-sdk": "^2.295.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "flatfile-csv-importer": "^0.1.12"
+    "flatfile-csv-importer": "^0.1.12",
+    "papaparse": "^4.6.0"
   },
   "devDependencies": {}
 }

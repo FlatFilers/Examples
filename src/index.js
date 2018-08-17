@@ -1,6 +1,5 @@
 const express = require('express')
 const aws = require('aws-sdk')
-// const Papa = require('papaparse')
 
 const app = express()
 
@@ -11,13 +10,11 @@ app.listen(9000, () => console.info('App listening on port 9000!'))
 app.locals.launch = function (x) { alert(x) }
 app.locals.config = { ...process.env }
 
-/*
- * Respond to GET requests to /
-*/
-
 const config = {
-  AWS_BUCKET_REGION: 'us-west-2',
-  AWS_BUCKET_NAME: 'ff-demos'
+  AWS_SECRET_ACCESS_KEY: 'access_key',
+  AWS_ACCESS_KEY_ID: 'key_id',
+  AWS_BUCKET_REGION: 'region',
+  AWS_BUCKET_NAME: 'bucket'
 }
 
 /*
@@ -38,9 +35,13 @@ app.get('/', function (req, res) {
     ContentType: fileType,
     ACL: 'public-read'
   }
-
+  aws.config.update({
+    "accessKeyId": config.AWS_ACCESS_KEY_ID,
+    "secretAccessKey": config.AWS_SECRET_ACCESS_KEY,
+    "region": config.AWS_BUCKET_REGION
+  })
   s3.getSignedUrl('putObject', s3Params, function (err, data) {
-    if(err){
+    if (err) {
       console.log(err)
       return res.end()
     }
@@ -51,44 +52,3 @@ app.get('/', function (req, res) {
     res.render('index.ejs', returnData)
   })
 })
-
-const uploadToS3 = async function (fileName, validData) {
-  const s3 = new aws.S3()
-  const fileType = 'text/csv'
-  const bucket = config.AWS_BUCKET_NAME
-  const s3Params = {
-    Bucket: bucket,
-    Key: fileName,
-    Expires: 60,
-    ContentType: fileType,
-    ACL: 'public-read'
-  }
-  let signedUrl = {}
-  aws.config.update({ "accessKeyId": "jQZ75HB/pkFtLXQVn7I75oyjgz19CeMyp3uDpsHQ", "secretAccessKey": "AKIAIMLTH7B5UKPCAARA", "region": "us-west-2" })
-  try {
-    signedUrl = await s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if (err) {
-        console.error(`Couldn't get signed url: ${err}`)
-      }
-      if (data) {
-        return {
-          signedRequest: data,
-          url: `https://${bucket}.s3.amazonaws.com/${fileName}`
-        }
-      } else {
-        throw new Error('No signed url')
-      }
-    })
-  } catch (err) {
-    robotImporter.displayError(`There was an error with Amazon S3: ${err}`)
-    return
-  }
-  // axios.post(signedUrl.signedRequest, Papa.unparse(validData))
-  //   .then(() => {
-  //     robotImporter.displaySuccess('Success!')
-  //   })
-  //   .catch((err) => {
-  //     robotImporter.displayError(`Error: ${err}`)
-  //   })
-  return signedUrl.url
-}

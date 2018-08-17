@@ -79,32 +79,30 @@ const launchButton = document.getElementById('launch')
 launchButton.addEventListener('click', function () {
   robotImporter
     .requestDataFromUser()
-    .then(async (results) => {
+    .then(function (results) {
       console.info(results.validData)
       robotImporter.displayLoader()
-      
-      const url = await uploadToS3(results.fileName, results.validData)
-      
-      document.getElementById('raw_output').value  = url
+      const file = Papa.unparse(results.validData)
+      uploadToS3(file)
     })
-    .catch((error) => {
+    .catch(function (error) {
       console.info(error || 'window close')
     })
 })
 
-function uploadFile(file, signedRequest, url){
-  const xhr = new XMLHttpRequest();
-  xhr.open('PUT', signedRequest);
-  xhr.onreadystatechange = () => {
-    if(xhr.readyState === 4){
-      if(xhr.status === 200){
-        document.getElementById('preview').src = url;
-        document.getElementById('avatar-url').value = url;
-      }
-      else{
-        alert('Could not upload file.');
+function uploadToS3 (file) {
+  console.log(signedRequest, url, file)
+  const xhr = new XMLHttpRequest()
+  xhr.open('PUT', signedRequest)
+  xhr.setRequestHeader('Content-Type', 'text/csv')
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        document.getElementById('raw_output').value = url
+      } else {
+        alert('Could not upload file.')
       }
     }
-  };
-  xhr.send(file);
+  }
+  xhr.send(file)
 }

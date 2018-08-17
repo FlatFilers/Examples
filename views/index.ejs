@@ -4,9 +4,11 @@
 	<title>Flatfile S3 Upload</title>
 	<meta charset="UTF-8" />
 	<script src="https://unpkg.com/flatfile-csv-importer/build/dist/index.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.0/papaparse.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<script>
 		var signedRequest = <%- JSON.stringify(signedRequest) %>
+		var url = <%- JSON.stringify(url) %>
 	</script>
 </head>
 
