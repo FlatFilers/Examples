@@ -9,6 +9,7 @@
 	<script>
 		var signedRequest = <%- JSON.stringify(signedRequest) %>
 		var url = <%- JSON.stringify(url) %>
+		var license = <%- JSON.stringify(license) %>
 	</script>
 </head>
 
@@ -16,7 +17,7 @@
 	<div id="main">
 		<input type="button" id="launch" value="Import robots" />
 		<div class="download">
-			<a href="#" id="original_csv" target="_blank" rel="noopener noreferrer">
+			<a href="robots-clean.csv" target="_blank" rel="noopener noreferrer">
 				Download a sample csv file here
 			</a>
 		</div>

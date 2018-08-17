@@ -1,5 +1,5 @@
 const robotImporter = new FlatfileImporter(
-  '923fe2e0-7967-11e8-914e-619390d70355',
+  license,
   {
     fields: [
       {
@@ -91,7 +91,6 @@ launchButton.addEventListener('click', function () {
 })
 
 function uploadToS3 (file) {
-  console.log(signedRequest, url, file)
   const xhr = new XMLHttpRequest()
   xhr.open('PUT', signedRequest)
   xhr.setRequestHeader('Content-Type', 'text/csv')
