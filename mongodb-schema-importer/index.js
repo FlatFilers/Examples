@@ -12,37 +12,62 @@ app.engine('html', require('ejs').renderFile)
 app.listen(9000, () => console.info('App listening on port 9000!'))
 
 app.get('/', function (req, res) {
-  MongoClient.connect(config.url, async function(err, client) {
-    assert.equal(null, err)
-    console.log("Connected successfully to server")
-  
-    const db = client.db(config.dbName)
-    const response = await findRobotTraits(db)
-    console.log(`Found the following ${config.collection} traits:`, response)
-    client.close()
-
-    const FF_config = {
-      fields: response.map(v => { return {key: v} }),
-      type: config.collection
-    }
-
-    res.render('index.ejs', {config: FF_config, license: config.FF_LICENSE})
-  })
+  if (config.url && config.dbName && config.collection) {
+    MongoClient.connect(config.url).then(async function(err, client) {
+      assert.equal(null, err)
+      console.log("Connected successfully to server")
+      
+      const db = client.db(config.dbName)
+      const response = await findRobotTraits(db)
+      console.log(`Found the following ${config.collection} traits:`, response)
+      client.close()
+      
+      const FF_config = {
+        fields: response.map(v => { return {key: v} }),
+        type: config.collection
+      }
+      
+      res.render('index.ejs', {config: FF_config, license: config.FF_LICENSE})
+    }).catch((err) => {
+      console.warn('The database connection failed: ', err)
+      renderDefault(res)
+    })
+  } else {
+    console.log('Insufficient database information was provided')
+    renderDefault(res)
+  }
 })
 
 app.get('/populate-defaults', function (req, res) {
-  MongoClient.connect(config.url, async function(err, client) {
+  MongoClient.connect(config.url).then(async function(err, client) {
     assert.equal(null, err)
     console.log("Connected successfully to server")
   
     const db = client.db(config.dbName)
     const response = await insertRobots(db)
     client.close()
-
+    
     res.status(200).send(`Inserted ${response.insertedCount} Robots`)
+  }).catch((err) => {
+    console.warn('The database connection failed: ', err)
+    res.status(500).send('The database connection failed: ', err)
   })
 })
 
+const renderDefault = function (res) {
+  res.render('index.ejs', {
+    config: {
+      fields: [
+        {key: 'default_field1'},
+        {key: 'default_field2'},
+        {key: 'default_field3'},
+        {key: 'default_field4'},
+      ],
+      type: 'Generic Data'
+    },
+    license: config.FF_LICENSE
+  })
+}
 
 const insertRobots = function(db) {
   const collection = db.collection(config.collection)
