@@ -4,12 +4,14 @@
   "description": "A simple app that creates a Flatfile importer based off of a given mongodb schema",
   "scripts": {
     "start": "node index.js",
+    "mongod": "mongod --dbpath=data --port 28015",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "http://github.com/monkeydzeke",
   "dependencies": {
     "ejs": "^2.6.1",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "mongodb": "~3.0.8"
   },
   "devDependencies": {}
 }
