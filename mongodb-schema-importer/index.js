@@ -12,19 +12,18 @@ app.engine('html', require('ejs').renderFile)
 app.listen(9000, () => console.info('App listening on port 9000!'))
 
 app.get('/', function (req, res) {
-  if (config.url && config.dbName && config.collection) {
-    MongoClient.connect(config.url).then(async function(err, client) {
-      assert.equal(null, err)
+  if (config.URL && config.DBNAME && config.COLLECTION) {
+    MongoClient.connect(config.URL).then(async (client) => {
       console.log("Connected successfully to server")
       
-      const db = client.db(config.dbName)
+      const db = client.db(config.DBNAME)
       const response = await findRobotTraits(db)
-      console.log(`Found the following ${config.collection} traits:`, response)
+      console.log(`Found the following ${config.COLLECTION} traits:`, response)
       client.close()
       
       const FF_config = {
         fields: response.map(v => { return {key: v} }),
-        type: config.collection
+        type: config.COLLECTION
       }
       
       res.render('index.ejs', {config: FF_config, license: config.FF_LICENSE})
@@ -39,11 +38,10 @@ app.get('/', function (req, res) {
 })
 
 app.get('/populate-defaults', function (req, res) {
-  MongoClient.connect(config.url).then(async function(err, client) {
-    assert.equal(null, err)
+  MongoClient.connect(config.URL).then(async (client) => {
     console.log("Connected successfully to server")
   
-    const db = client.db(config.dbName)
+    const db = client.db(config.DBNAME)
     const response = await insertRobots(db)
     client.close()
     
@@ -70,7 +68,7 @@ const renderDefault = function (res) {
 }
 
 const insertRobots = function(db) {
-  const collection = db.collection(config.collection)
+  const collection = db.collection(config.COLLECTION)
   return new Promise((resolve, reject) => {
     collection.insertMany([
       {name: '9 Sixty', nick: 'Silence', helmet: 'triangular'},
@@ -88,7 +86,7 @@ const insertRobots = function(db) {
 }
 
 const findRobotTraits = async function(db) {
-  const collection = db.collection(config.collection)
+  const collection = db.collection(config.COLLECTION)
   return new Promise((resolve, reject) => {
     collection.find({}).project({_id: 0}).toArray(async function(err, robots) {
       assert.equal(err, null)
