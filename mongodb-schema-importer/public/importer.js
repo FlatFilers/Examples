@@ -1,5 +1,7 @@
 const robotImporter = new FlatfileImporter(license, config)
 
+document.getElementById('config_output').value = JSON.stringify(config, null, 2)
+
 const launchButton = document.getElementById('launch')
 launchButton.addEventListener('click', function () {
   robotImporter

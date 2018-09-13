@@ -48,7 +48,7 @@ body {
   background-color: #1d62b4;
 }
 
-#raw_output {
+.output {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
