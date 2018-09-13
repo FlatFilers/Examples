@@ -1,0 +1,29 @@
+<html>
+
+<head>
+	<title>Flatfile S3 Upload</title>
+	<meta charset="UTF-8" />
+	<script src="https://unpkg.com/flatfile-csv-importer/build/dist/index.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<script>
+		var config = <%- JSON.stringify(config) %>
+		var license = <%- JSON.stringify(license) %>
+	</script>
+</head>
+
+<body>
+	<div id="main">
+		<input type="button" id="launch" value="Import robots" />
+		<div class="download">
+			<a href="robots-clean.csv" target="_blank" rel="noopener noreferrer">
+				Download a sample csv file here
+			</a>
+		</div>
+		<textarea id="raw_output">Your handled data will appear here.</textarea>
+	</div>
+	
+	<script src="importer.js"></script>
+	
+</body>
+
+</html>
