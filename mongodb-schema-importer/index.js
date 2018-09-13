@@ -1,15 +1,19 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
 const assert = require('assert')
 
-const config = require('./.env.js')
-
 const app = express()
+const Schema = mongoose.Schema
+const schemas = require('./schemas.js')
+const config = require('./.env.js')
 
 app.set('views', './views')
 app.use(express.static('./public'))
 app.engine('html', require('ejs').renderFile)
 app.listen(9000, () => console.info('App listening on port 9000!'))
+
+console.log(configFromSchema())
 
 app.get('/', function (req, res) {
   if (config.URL && config.DBNAME && config.COLLECTION) {
@@ -52,7 +56,7 @@ app.get('/populate-defaults', function (req, res) {
   })
 })
 
-const renderDefault = function (res) {
+function renderDefault (res) {
   res.render('index.ejs', {
     config: {
       fields: [
@@ -67,7 +71,7 @@ const renderDefault = function (res) {
   })
 }
 
-const insertRobots = function(db) {
+function insertRobots (db) {
   const collection = db.collection(config.COLLECTION)
   return new Promise((resolve, reject) => {
     collection.insertMany([
@@ -85,7 +89,7 @@ const insertRobots = function(db) {
   })
 }
 
-const findRobotTraits = async function(db) {
+async function findRobotTraits (db) {
   const collection = db.collection(config.COLLECTION)
   return new Promise((resolve, reject) => {
     collection.find({}).project({_id: 0}).toArray(async function(err, robots) {
@@ -93,4 +97,26 @@ const findRobotTraits = async function(db) {
       resolve(robots.reduce((acc, robot) => [...acc, ...Object.keys(robot).filter(t => acc.indexOf(t) < 0)], []))
     })
   })
+}
+
+function configFromSchema () {
+  const FF_config = {
+    fields: [],
+    type: ''
+  }
+  Object.keys(schemas).forEach((s) => {
+    const schema = schemas[s].schema
+    FF_config.type = FF_config.type || s
+    schema.eachPath((name, type) => {
+      if (name === '_id' || name === '__v')
+        return
+      console.log(name, type)
+      const field = {
+        key: name
+      }
+      FF_config.fields.push(field)
+    })
+  })
+  console.log(FF_config)
+  return FF_config
 }
