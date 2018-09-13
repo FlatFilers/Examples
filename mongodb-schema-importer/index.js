@@ -12,7 +12,7 @@ app.listen(9000, () => console.info('App listening on port 9000!'))
  * Set these to your config settings
  */
 const config = {
-  FF_LICENSE: 'flatfile_license'
+  FF_LICENSE: 'flatfile_license_key'
 }
 
 app.get('/', function (req, res) {
