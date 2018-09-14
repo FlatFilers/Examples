@@ -23,10 +23,11 @@ module.exports =  function (schemas) {
               })
               break
             case 'regexp':
+              const r = v.regexp.toString()
               field.validators.push({
                 validate: 'regex_matches',
                 error: v.message.replace('Path `{PATH}`', `'${name}'`),
-                regex: v.regexp
+                regex: r.substring(1, r.length-1)
               })
               break
             case 'enum':
@@ -53,7 +54,7 @@ module.exports =  function (schemas) {
           field.validators.push({
             validate: 'regex_matches',
             error: `'${name}' must be numeric.`,
-            regex: /^(\d|\.)*$/
+            regex: '^(\\d|\\.)*$'
           })
           break
         default:

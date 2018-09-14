@@ -5,6 +5,7 @@ const assert = require('assert')
 const app = express()
 const schemas = require('./schemas.js')
 const configFromSchema = require('./configFromSchema.js')
+const Schema_config = configFromSchema(schemas)
 const config = require('./.env.js')
 
 app.set('views', './views')
@@ -12,7 +13,6 @@ app.use(express.static('./public'))
 app.engine('html', require('ejs').renderFile)
 app.listen(9000, () => console.info('App listening on port 9000!'))
 
-configFromSchema(schemas)
 
 app.get('/', function (req, res) {
   if (config.URL && config.DBNAME && config.COLLECTION) {
@@ -24,12 +24,12 @@ app.get('/', function (req, res) {
       console.log(`Found the following ${config.COLLECTION} traits:`, response)
       client.close()
       
-      const FF_config = {
+      const DB_config = {
         fields: response.map(v => { return {key: v} }),
         type: config.COLLECTION
       }
       
-      res.render('index.ejs', {config: FF_config, license: config.FF_LICENSE})
+      res.render('index.ejs', {DB_config, Schema_config, license: config.FF_LICENSE})
     }).catch((err) => {
       console.warn('The database connection failed: ', err)
       renderDefault(res)
