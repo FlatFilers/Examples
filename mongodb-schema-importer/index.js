@@ -1,11 +1,10 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
-const mongoose = require('mongoose')
 const assert = require('assert')
 
 const app = express()
-const Schema = mongoose.Schema
 const schemas = require('./schemas.js')
+const configFromSchema = require('./configFromSchema.js')
 const config = require('./.env.js')
 
 app.set('views', './views')
@@ -13,7 +12,7 @@ app.use(express.static('./public'))
 app.engine('html', require('ejs').renderFile)
 app.listen(9000, () => console.info('App listening on port 9000!'))
 
-console.log(configFromSchema())
+configFromSchema(schemas)
 
 app.get('/', function (req, res) {
   if (config.URL && config.DBNAME && config.COLLECTION) {
@@ -97,26 +96,4 @@ async function findRobotTraits (db) {
       resolve(robots.reduce((acc, robot) => [...acc, ...Object.keys(robot).filter(t => acc.indexOf(t) < 0)], []))
     })
   })
-}
-
-function configFromSchema () {
-  const FF_config = {
-    fields: [],
-    type: ''
-  }
-  Object.keys(schemas).forEach((s) => {
-    const schema = schemas[s].schema
-    FF_config.type = FF_config.type || s
-    schema.eachPath((name, type) => {
-      if (name === '_id' || name === '__v')
-        return
-      console.log(name, type)
-      const field = {
-        key: name
-      }
-      FF_config.fields.push(field)
-    })
-  })
-  console.log(FF_config)
-  return FF_config
 }
