@@ -1,21 +1,6 @@
-# vue-demo
+# Flatfile Importer demo using Vue
 
 ## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
+1. `yarn install`
+2. Copy env.example.js to env.js and fill in with your config and Flatfile license key
+3. `yarn run serve`
