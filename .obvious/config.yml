@@ -1,0 +1,6 @@
+# Repo policy for Obvious workers.
+# Auto-detected from GitHub repo settings (FlatFilers/Examples) on 2026-08-24.
+defaultBranch: master
+# Repo allows merge commits, squash, and rebase; squash is the default choice.
+mergeMethod: squash
+deleteBranchOnMerge: false
